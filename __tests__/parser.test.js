@@ -102,7 +102,6 @@ describe('Parser Tests', () => {
     });
   });
 
-  // Nuevas pruebas para las mejoras del analizador léxico
   describe('Lexer enhancements', () => {
     test('parses floating point and scientific notation numbers', () => {
       expect(parse("23")).toBe(23);
