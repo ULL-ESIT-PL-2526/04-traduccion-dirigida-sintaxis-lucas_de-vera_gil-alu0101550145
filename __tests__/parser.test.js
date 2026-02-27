@@ -119,13 +119,12 @@ describe('Parser Tests', () => {
 
   describe('Input validation and error cases', () => {
     test('should handle invalid input gracefully', () => {
-      // These should throw errors or be handled by the parser
       expect(() => parse("")).toThrow();
       expect(() => parse("abc")).toThrow();
       expect(() => parse("3 +")).toThrow();
       expect(() => parse("+ 3")).toThrow();
       expect(() => parse("3 + + 4")).toThrow();
-      expect(parse("3.5")).toBeCloseTo(3.5); // Decimals supported by lexer now
+      expect(parse("3.5")).toBeCloseTo(3.5); 
     });
 
     test('should handle incomplete expressions', () => {
