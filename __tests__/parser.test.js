@@ -102,6 +102,21 @@ describe('Parser Tests', () => {
     });
   });
 
+  // Nuevas pruebas para las mejoras del analizador léxico
+  describe('Lexer enhancements', () => {
+    test('parses floating point and scientific notation numbers', () => {
+      expect(parse("23")).toBe(23);
+      expect(parse("2.35")).toBeCloseTo(2.35, 10);
+      expect(parse("2.35e-3")).toBeCloseTo(0.00235, 10);
+      expect(parse("2.35E+3")).toBeCloseTo(2350, 10);
+    });
+
+    test('ignores single-line comments starting with //', () => {
+      expect(parse("2 // comment\n + 3")).toBe(5);
+      expect(parse("2 + 3 // end")).toBe(5);
+    });
+  });
+
   describe('Input validation and error cases', () => {
     test('should handle invalid input gracefully', () => {
       // These should throw errors or be handled by the parser
@@ -110,7 +125,7 @@ describe('Parser Tests', () => {
       expect(() => parse("3 +")).toThrow();
       expect(() => parse("+ 3")).toThrow();
       expect(() => parse("3 + + 4")).toThrow();
-      expect(() => parse("3.5")).toThrow(); // Only integers are supported
+      expect(parse("3.5")).toBeCloseTo(3.5); // Decimals supported by lexer now
     });
 
     test('should handle incomplete expressions', () => {
