@@ -9,13 +9,15 @@
 "**"                  { return 'OPOW'; }
 "*"                   { return 'OPMU'; }
 "/"                   { return 'OPMU'; }
+"("                   { return 'LPAREN'; }
+")"                   { return 'RPAREN'; }
 <<EOF>>               { return 'EOF'; }
 .                     { return 'INVALID'; }
 /lex
 
 /* Parser */
 %start L
-%token NUMBER OPAD OPMU OPOW
+%token NUMBER OPAD OPMU OPOW LPAREN RPAREN
 %%
 
 L
@@ -47,6 +49,8 @@ R
 F
     : NUMBER
         { $$ = Number(yytext); }
+    | LPAREN E RPAREN
+        { $$ = $E; }
     ;
 %%
 
