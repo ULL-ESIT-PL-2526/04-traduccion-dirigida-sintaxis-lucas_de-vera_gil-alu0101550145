@@ -14,12 +14,12 @@ describe('Parser Failing Tests', () => {
     expect(parse("2 * 3 ** 2")).toBe(18); // 2 * (3 ** 2) = 18
     expect(parse("10 - 2 ** 3")).toBe(2); // 10 - (2 ** 3) = 2
   });
-  
+
   test('should handle right associativity for exponentiation', () => {
     expect(parse("2 ** 3 ** 2")).toBe(512); // 2 ** (3 ** 2) = 2 ** 9 = 512
     expect(parse("3 ** 2 ** 2")).toBe(81); // 3 ** (2 ** 2) = 3 ** 4 = 81
   });
-   
+
   test('should handle mixed operations with correct precedence', () => {
     expect(parse("1 + 2 * 3 - 4")).toBe(3); // 1 + (2 * 3) - 4 = 3
     expect(parse("15 / 3 + 2 * 4")).toBe(13); // (15 / 3) + (2 * 4) = 13
