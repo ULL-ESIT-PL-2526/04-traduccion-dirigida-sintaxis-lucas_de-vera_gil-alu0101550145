@@ -58,4 +58,22 @@ describe('Parser Failing Tests', () => {
     expect(parse("2.0 + 3.0 ** 2")).toBeCloseTo(11.0, 10); // 2.0 + (3.0 ** 2)
     expect(parse("2.0 ** 3.0 ** 2.0")).toBeCloseTo(512.0, 10); // 2.0 ** (3.0 ** 2.0)
   });
+
+  test('should handle precedence override with parenthesized expressions', () => {
+    expect(parse("(2 + 3) * 4")).toBe(20); // (2 + 3) * 4
+    expect(parse("2 * (3 + 4)")).toBe(14); // 2 * (3 + 4)
+    expect(parse("(2 + 3) ** 2")).toBe(25); // (2 + 3) ** 2
+    expect(parse("2 ** (3 + 1)")).toBe(16); // 2 ** (3 + 1)
+  });
+
+  test('should handle nested parenthesized expressions', () => {
+    expect(parse("((1 + 2) * (3 + 4))")).toBe(21); // (1 + 2) * (3 + 4)
+    expect(parse("(2 + (3 * 4)) - (10 / (2 + 3))")).toBe(12); // (2 + 12) - (10 / 5)
+  });
+
+  test('should handle parenthesized expressions with floats', () => {
+    expect(parse("(2.5 + 3.5) * 2")).toBeCloseTo(12, 10); // (2.5 + 3.5) * 2
+    expect(parse("2.0 * (3.0 + 4.0 / 2.0)")).toBeCloseTo(10, 10); // 2.0 * (3.0 + (4.0 / 2.0))
+    expect(parse("(1.5 + 2.5) ** 2")).toBeCloseTo(16, 10); // (1.5 + 2.5) ** 2
+  });
 });
