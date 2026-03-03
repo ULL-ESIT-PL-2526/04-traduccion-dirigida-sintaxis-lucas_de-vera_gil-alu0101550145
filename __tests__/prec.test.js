@@ -1,3 +1,5 @@
+const parse = require("../src/parser.js").parse;
+
 describe('Parser Failing Tests', () => {
 
   test('should handle multiplication and division before addition and subtraction', () => {
@@ -37,5 +39,23 @@ describe('Parser Failing Tests', () => {
     expect(parse("10 / 2 / 5")).toBe(1); // (10 / 2) / 5 = 1
     expect(parse("100 - 50 + 25")).toBe(75); // (100 - 50) + 25 = 75
     expect(parse("2 * 3 + 4 * 5")).toBe(26); // (2 * 3) + (4 * 5) = 26
+  });
+
+  test('should handle precedence with floating point numbers', () => {
+    expect(parse("2.5 + 3.2 * 2")).toBeCloseTo(8.9, 10); // 2.5 + (3.2 * 2)
+    expect(parse("10.5 - 6.5 / 2")).toBeCloseTo(7.25, 10); // 10.5 - (6.5 / 2)
+    expect(parse("1.2 + 3.4 * 2.5 - 0.7")).toBeCloseTo(9.0, 10); // 1.2 + (3.4 * 2.5) - 0.7
+  });
+
+  test('should handle left associativity for additive and multiplicative operators with floats', () => {
+    expect(parse("10.5 - 4.2 - 1.1")).toBeCloseTo(5.2, 10); // (10.5 - 4.2) - 1.1
+    expect(parse("20.0 / 2.0 / 5.0")).toBeCloseTo(2.0, 10); // (20.0 / 2.0) / 5.0
+    expect(parse("1.1 + 2.2 + 3.3")).toBeCloseTo(6.6, 10); // (1.1 + 2.2) + 3.3
+  });
+
+  test('should handle exponentiation precedence and right associativity with floats', () => {
+    expect(parse("2.5 * 2.0 ** 2")).toBeCloseTo(10.0, 10); // 2.5 * (2.0 ** 2)
+    expect(parse("2.0 + 3.0 ** 2")).toBeCloseTo(11.0, 10); // 2.0 + (3.0 ** 2)
+    expect(parse("2.0 ** 3.0 ** 2.0")).toBeCloseTo(512.0, 10); // 2.0 ** (3.0 ** 2.0)
   });
 });

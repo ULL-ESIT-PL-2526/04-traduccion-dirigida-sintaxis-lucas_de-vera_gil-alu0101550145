@@ -4,30 +4,47 @@
 \s+                   { /* skip whitespace */; }
 \/\/.*                { /* skip single-line comment */; }
 [0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)? { return 'NUMBER'; }
-"**"                  { return 'OP'; }
-[-+*/]                { return 'OP'; }
+"+"                   { return 'OPAD'; }
+"-"                   { return 'OPAD'; }
+"**"                  { return 'OPOW'; }
+"*"                   { return 'OPMU'; }
+"/"                   { return 'OPMU'; }
 <<EOF>>               { return 'EOF'; }
 .                     { return 'INVALID'; }
 /lex
 
 /* Parser */
-%start expressions
-%token NUMBER
+%start L
+%token NUMBER OPAD OPMU OPOW
 %%
 
-expressions
-    : expression EOF
-        { return $expression; }
+L
+    : E EOF
+        { return $E; }
     ;
 
-expression
-    : expression OP term
-        { $$ = operate($OP, $expression, $term); }
-    | term
-        { $$ = $term; }
+E
+    : E OPAD T
+        { $$ = operate($OPAD, $E, $T); }
+    | T
+        { $$ = $T; }
     ;
 
-term
+T
+    : T OPMU R
+        { $$ = operate($OPMU, $T, $R); }
+    | R
+        { $$ = $R; }
+    ;
+
+R
+    : F OPOW R
+        { $$ = operate($OPOW, $F, $R); }
+    | F
+        { $$ = $F; }
+    ;
+
+F
     : NUMBER
         { $$ = Number(yytext); }
     ;
@@ -39,6 +56,7 @@ function operate(op, left, right) {
         case '-': return left - right;
         case '*': return left * right;
         case '/': return left / right;
+        case '↑':
         case '**': return Math.pow(left, right);
     }
 }
