@@ -136,12 +136,12 @@ graph TD
 ```mermaid
 graph TD
     E1[E] --> E2[E]
-    E1 --> OP1[/]
+    E1 --> OP1["/"]
     E1 --> T1[T]
     T1 --> V1[2]
     
     E2 --> E3[E]
-    E2 --> OP2[-]
+    E2 --> OP2["-"]
     E2 --> T2[T]
     T2 --> V2[4]
     
