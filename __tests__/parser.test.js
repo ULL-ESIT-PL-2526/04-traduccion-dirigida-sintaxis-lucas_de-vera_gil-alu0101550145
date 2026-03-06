@@ -61,6 +61,12 @@ describe('Parser Tests', () => {
       expect(parse("2 * 3 * 4")).toBe(24);        // (2 * 3) * 4 = 24
       expect(parse("100 - 20 - 10 - 5")).toBe(65); // ((100 - 20) - 10) - 5 = 65
     });
+
+    test('should handle parenthesized expressions', () => {
+      expect(parse("(2 + 3) * 4")).toBe(20); // (2 + 3) * 4 = 20
+      expect(parse("2 * (3 + 4)")).toBe(14); // 2 * (3 + 4) = 14
+      expect(parse("(2 + 3) ** 2")).toBe(25); // (2 + 3) ** 2 = 25
+    });
   });
 
   describe('Edge cases', () => {
@@ -123,7 +129,7 @@ describe('Parser Tests', () => {
       expect(() => parse("3 +")).toThrow();
       expect(() => parse("+ 3")).toThrow();
       expect(() => parse("3 + + 4")).toThrow();
-      expect(parse("3.5")).toBeCloseTo(3.5); 
+      expect(parse("3.5")).toBeCloseTo(3.5);
     });
 
     test('should handle incomplete expressions', () => {
