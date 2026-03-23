@@ -16,41 +16,41 @@
 /lex
 
 /* Parser */
-%start L
+%start inicio
 %token NUMBER OPAD OPMU OPOW LPAREN RPAREN
 %%
 
-L
-    : E EOF
-        { return $E; }
+inicio
+    : expresion EOF
+        { return $expresion; }
     ;
 
-E
-    : E OPAD T
-        { $$ = operate($OPAD, $E, $T); }
-    | T
-        { $$ = $T; }
+expresion
+    : expresion OPAD termino
+        { $$ = operate($OPAD, $expresion, $termino); }
+    | termino
+        { $$ = $termino; }
     ;
 
-T
-    : T OPMU R
-        { $$ = operate($OPMU, $T, $R); }
-    | R
-        { $$ = $R; }
+termino
+    : termino OPMU potencia
+        { $$ = operate($OPMU, $termino, $potencia); }
+    | potencia
+        { $$ = $potencia; }
     ;
 
-R
-    : F OPOW R
-        { $$ = operate($OPOW, $F, $R); }
-    | F
-        { $$ = $F; }
+potencia
+    : factor OPOW potencia
+        { $$ = operate($OPOW, $factor, $potencia); }
+    | factor
+        { $$ = $factor; }
     ;
 
-F
+factor
     : NUMBER
         { $$ = Number(yytext); }
-    | LPAREN E RPAREN
-        { $$ = $E; }
+    | LPAREN expresion RPAREN
+        { $$ = $expresion; }
     ;
 %%
 
@@ -60,7 +60,6 @@ function operate(op, left, right) {
         case '-': return left - right;
         case '*': return left * right;
         case '/': return left / right;
-        case '↑':
         case '**': return Math.pow(left, right);
     }
 }
